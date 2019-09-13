@@ -9,15 +9,16 @@ class Deck
     const static int DECK_SIZE = 52;
     const std::string SUITS[4] = {"♥", "♠", "♦", "♣"};
     int* DECK;
+    int remaining;
 
     void swap(int a, int b);
     std::string card(int cardValue);
+    int cardValue(std::string card);
 
     public:
-    int remaining;
-
     Deck();
     ~Deck();
+
     void init();
     void shuffle();
     std::string draw();
@@ -25,7 +26,6 @@ class Deck
 
 Deck::Deck(void)
 {
-    DECK = new int[DECK_SIZE];
     init();
 }
 
@@ -45,48 +45,49 @@ std::string Deck::card(int cardValue)
 {
     int suit = cardValue % 4;
     int value = cardValue / 4 + 1;
-
-    std::string displayValue = SUITS[suit];
+    std::string card = SUITS[suit];
 
     switch (value)
     {
         case 1:
-            displayValue += "A";
+            card += "A";
             break;
         case 11:
-            displayValue += "J";
+            card += "J";
             break;
         case 12:
-            displayValue += "Q";
+            card += "Q";
             break;
         case 13:
-            displayValue += "K";
+            card += "K";
             break;
         default:
-            displayValue += std::to_string(value);
+            card += std::to_string(value);
             break;
     }
 
-    return displayValue;
+    return card;
+    return "";
 }
 
 std::string Deck::draw()
 {
-    std::string cardStr = card(*DECK);
-
     if (remaining == 0)
     {
         return "";
     }
 
-    DECK++;
     remaining--;
+    std::string cardStr = card(DECK[remaining]);
 
     return cardStr;
 }
 
 void Deck::init()
 {
+    delete[] DECK;
+    DECK = new int[DECK_SIZE];
+
     for (int i = 0; i < DECK_SIZE; i++)
     {
         DECK[i] = i;
@@ -98,7 +99,7 @@ void Deck::init()
 void Deck::shuffle()
 {
     srand(time(NULL));
-    for (int i = 0; i < DECK_SIZE; i++)
+    for (int i = 0; i < remaining; i++)
     {
         int j = rand() % (i+1);
 

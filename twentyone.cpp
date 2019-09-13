@@ -1,17 +1,83 @@
 #include <iostream>
+#include <string.h>
 #include "deck.cpp"
 
 using namespace std;
 
-int main(int argc, char** argv)
+void drawCards(string* cards, Deck* deck)
 {
-    Deck* deck = new Deck();
-    deck->shuffle();
+    for (int i = 0; i < 21; i++)
+    {
+        cards[i] = deck->draw();
+    }
+}
+
+void dealCards(string* cards)
+{
+    cout << "#1\t#2\t#3\n\n";
 
     for (int i = 0; i < 21; i++)
     {
-        cout << "Card " << i << ": " << deck->draw() << '\n';
+        cout << cards[i];
+
+        if (i % 3 == 2)
+        {
+            cout << '\n';
+        }
+        else
+        {
+            cout << '\t';
+        }
     }
+}
+
+int getSelection()
+{
+    int selection;
+
+    cout << "\nPlease pick a card and enter its column (1-3): ";
+    cin >> selection;
+    cout << '\n';
+
+    return selection;
+}
+
+void collectCards(string* cards, int selection)
+{
+    string tmp[21];
+
+    copy(cards, cards+21, tmp);
+
+    for (int i = 0, k = 0; i < 3; i++)
+    {
+        // This is where the magic happens
+        for (int j = (selection + i + 1) % 3; j < 21; j+=3, k++)
+        {
+            cards[k] = tmp[j];
+        }
+    }
+}
+
+void playRound(string* cards)
+{
+    dealCards(cards);
+    int selection = getSelection();
+    collectCards(cards, selection);
+}
+
+int main(int argc, char** argv)
+{
+    Deck* deck = new Deck();
+    string* cards = new string[21];
+    deck->shuffle();
+    drawCards(cards, deck);
+
+    for (int i = 0; i < 3; i++)
+    {
+        playRound(cards);
+    }
+
+    cout << "Your card is " << cards[10] << "!\n";
 
     return 0;
 }
