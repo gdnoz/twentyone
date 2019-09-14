@@ -1,19 +1,20 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
-#include <string>
+
+using namespace std;
 
 class Deck
 {
     private:
     const static int DECK_SIZE = 52;
-    const std::string SUITS[4] = {"♥", "♠", "♦", "♣"};
+    const string SUITS[4] = {"♥", "♠", "♦", "♣"};
     int* DECK;
     int remaining;
 
     void swap(int a, int b);
-    std::string card(int cardValue);
-    int cardValue(std::string card);
+    string card(int cardValue);
+    int cardValue(string card);
 
     public:
     Deck();
@@ -21,11 +22,12 @@ class Deck
 
     void init();
     void shuffle();
-    std::string draw();
+    string draw();
 };
 
 Deck::Deck(void)
 {
+    DECK = new int[DECK_SIZE];
     init();
 }
 
@@ -41,11 +43,11 @@ void Deck::swap(int a, int b)
     DECK[b] = tmp;
 }
 
-std::string Deck::card(int cardValue)
+string Deck::card(int cardValue)
 {
     int suit = cardValue % 4;
     int value = cardValue / 4 + 1;
-    std::string card = SUITS[suit];
+    string card = SUITS[suit];
 
     switch (value)
     {
@@ -62,7 +64,7 @@ std::string Deck::card(int cardValue)
             card += "K";
             break;
         default:
-            card += std::to_string(value);
+            card += to_string(value);
             break;
     }
 
@@ -70,7 +72,7 @@ std::string Deck::card(int cardValue)
     return "";
 }
 
-std::string Deck::draw()
+string Deck::draw()
 {
     if (remaining == 0)
     {
@@ -78,16 +80,13 @@ std::string Deck::draw()
     }
 
     remaining--;
-    std::string cardStr = card(DECK[remaining]);
+    string cardStr = card(DECK[remaining]);
 
     return cardStr;
 }
 
 void Deck::init()
 {
-    delete[] DECK;
-    DECK = new int[DECK_SIZE];
-
     for (int i = 0; i < DECK_SIZE; i++)
     {
         DECK[i] = i;

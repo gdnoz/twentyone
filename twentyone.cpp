@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string.h>
 #include "deck.cpp"
 
 using namespace std;
@@ -31,11 +30,11 @@ void dealCards(string* cards)
     }
 }
 
-int getSelection()
+int getSelection(string msg)
 {
     int selection;
 
-    cout << "\nPlease pick a card and enter its column (1-3): ";
+    cout << "\n" << msg << ": ";
     cin >> selection;
     cout << '\n';
 
@@ -58,10 +57,10 @@ void collectCards(string* cards, int selection)
     }
 }
 
-void playRound(string* cards)
+void playRound(string* cards, string msg)
 {
     dealCards(cards);
-    int selection = getSelection();
+    int selection = getSelection(msg);
     collectCards(cards, selection);
 }
 
@@ -74,7 +73,9 @@ int main(int argc, char** argv)
 
     for (int i = 0; i < 3; i++)
     {
-        playRound(cards);
+        playRound(cards, i == 0 ?
+            "Please pick a card and enter its column (1-3)" :
+            "Enter the column containing your card");
     }
 
     cout << "Your card is " << cards[10] << "!\n";
